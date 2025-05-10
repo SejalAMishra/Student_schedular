@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Mastery - Manage Your Time Effectively</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #f7f7f7, #e2e2e2);
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .header {
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(90deg, #FF8C00, #FF6347);
+            color: white;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .main-content {
+            text-align: center;
+            padding: 50px 20px;
+            background-color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            margin: 30px 0;
+            max-width: 900px;
+            width: 100%;
+        }
+        .main-content h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+            color: #FF6347;
+        }
+        .login-container {
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 3px 10px rgba(251, 17, 17, 0.3);
+            width: 300px;
+            margin: 20px auto;
+        }
+        .login-container h3 {
+            margin-bottom: 20px;
+            color: #FF6347;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+        }
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #FF8C00;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #FF6347;
+        }
+        /* Hide schedule maker by default */
+        #schedule-maker {
+            display: none;
+        }
+        .schedule-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            text-align: center;
+        }
+        .input-group {
+            margin: 10px 0;
+        }
+        .input-group input {
+            margin-right: 10px;
+        }
+        .input-group button {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+        .input-group button img {
+            width: 20px;
+        }
+        #timetable {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <div class="header">
+        <h1>Time Mastery</h1>
+        <p>Master Your Time, Achieve Your Goals</p>
+    </div>
+
+    <!-- Login Page -->
+    <div class="main-content" id="login-page">
+        <h2>Welcome to Time Mastery</h2>
+        <p>Your journey to better time management starts here.</p>
+
+        <div class="login-container">
+            <h3>Login to Your Account</h3>
+            <form id="login-form">
+                <input type="text" placeholder="User ID" required>
+                <input type="password" placeholder="Passcode" required>
+                <button type="submit">Login</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Schedule Maker Page -->
+    <div id="schedule-maker">
+        <div class="schedule-container">
+            <h2>Create Your Daily Study Schedule</h2>
+            <form id="schedule-form">
+                <div id="schedule-inputs">
+                    <div class="input-group">
+                        <input type="text" placeholder="Subject" name="subject" required>
+                        <input type="time" name="start-time" required>
+                        <input type="time" name="end-time" required>
+                        <button type="button" class="delete-btn">
+                            <img src="https://cdn-icons-png.flaticon.com/512/6861/6861362.png" alt="Delete">
+                        </button>
+                    </div>
+                </div>
+                <button type="button" onclick="addSchedule()">Add Another Subject</button>
+                <button type="submit">Generate Timetable</button>
+            </form>
+            <div id="timetable"></div>
+        </div>
+    </div>
+
+    <script>
+    // Handle Login Form Submission
+    document.getElementById("login-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+
+        const userId = event.target[0].value;
+        const passcode = event.target[1].value;
+
+        // Check credentials
+        if (userId === "admin" && passcode === "password123") {
+            // Hide the login page and show the schedule maker
+            document.getElementById("login-page").style.display = "none";
+            document.getElementById("schedule-maker").style.display = "block";
+        } else {
+            alert("Invalid User ID or Passcode");
+        }
+    });
+
+    // Add another subject
+    function addSchedule() {
+        let scheduleInputs = document.getElementById("schedule-inputs");
+        let inputGroup = document.createElement("div");
+        inputGroup.className = "input-group";
+        inputGroup.innerHTML = `
+            <input type="text" placeholder="Subject" name="subject" required>
+            <input type="time" name="start-time" required>
+            <input type="time" name="end-time" required>
+            <button type="button" class="delete-btn">
+                <img src="https://cdn-icons-png.flaticon.com/512/6861/6861362.png" alt="Delete">
+            </button>
+        `;
+        scheduleInputs.appendChild(inputGroup);
+        addDeleteButtonFunctionality(inputGroup.querySelector('.delete-btn'));
+    }
+
+    // Add functionality to delete a subject
+    function addDeleteButtonFunctionality(deleteBtn) {
+        deleteBtn.addEventListener('click', function() {
+            deleteBtn.parentElement.remove();
+        });
+    }
+
+    // Add delete button functionality for initial subject
+    addDeleteButtonFunctionality(document.querySelector('.delete-btn'));
+
+    // Generate Timetable
+    document.getElementById("schedule-form").addEventListener("submit", function(event) {
+        event.preventDefault();
+        let subjects = document.querySelectorAll('input[name="subject"]');
+        let startTimes = document.querySelectorAll('input[name="start-time"]');
+        let endTimes = document.querySelectorAll('input[name="end-time"]');
+        let timetable = "<h2>Your Timetable</h2><ul>";
+        
+        for (let i = 0; i < subjects.length; i++) {
+            timetable += `<li>${startTimes[i].value} - ${endTimes[i].value}: ${subjects[i].value}</li>`;
+        }
+        
+        timetable += "</ul>";
+        
+        document.getElementById("timetable").innerHTML = timetable;
+    });
+    </script>
+
+</body>
+</html>
